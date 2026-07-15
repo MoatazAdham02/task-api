@@ -1,4 +1,7 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -86,6 +89,16 @@ app.delete('/tasks/:id', (req, res) => {
   tasks.splice(taskIndex, 1);
   res.status(204).send();
 });
+
+const swaggerDocument = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'openapi.json'), 'utf8')
+);
+
+app.get('/openapi.json', (req, res) => {
+  res.json(swaggerDocument);
+});
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
