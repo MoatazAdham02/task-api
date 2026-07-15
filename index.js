@@ -16,6 +16,17 @@ app.get('/tasks', (req, res) => {
   res.json(tasks);
 });
 
+app.get('/tasks/:id', (req, res) => {
+  const taskId = Number(req.params.id);
+  const task = tasks.find((item) => item.id === taskId);
+
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' });
+  }
+
+  res.json(task);
+});
+
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
 });
