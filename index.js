@@ -3,10 +3,14 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(express.json());
+
 let tasks = [
   { id: 1, title: 'Buy milk', done: false },
   { id: 2, title: 'Learn Node.js', done: true }
 ];
+
+let nextId = 3;
 
 app.get('/', (req, res) => {
   res.send('Hello from Task API');
@@ -25,6 +29,23 @@ app.get('/tasks/:id', (req, res) => {
   }
 
   res.json(task);
+});
+
+app.post('/tasks', (req, res) => {
+  const { title } = req.body;
+
+  if (typeof title !== 'string' || title.trim() === '') {
+    return res.status(400).json({ error: 'Title is required' });
+  }
+
+  const newTask = {
+    id: nextId++,
+    title: title.trim(),
+    done: false
+  };
+
+  tasks.push(newTask);
+  res.status(201).json(newTask);
 });
 
 app.listen(port, () => {
