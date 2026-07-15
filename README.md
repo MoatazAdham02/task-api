@@ -9,13 +9,18 @@ npm install
 npm start
 ```
 
-Then open http://localhost:3000.
+Then open:
+- http://localhost:3000
+- http://localhost:3000/docs
 
-## Endpoints
+## Available endpoints
 
 - GET /tasks
 - GET /tasks/:id
 - POST /tasks
 - PUT /tasks/:id
 - DELETE /tasks/:id
-- GET /docs for Swagger UI
+
+## Notes
+
+The task list is stored in memory, so restarting the server will clear all tasks.
