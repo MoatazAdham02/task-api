@@ -1,0 +1,55 @@
+What you should learn and understand from this assignment
+=======================================================
+
+1. CRUD basics
+- Understand how Create, Read, Update, and Delete work in a backend API.
+- Know what each route does:
+  - GET /tasks
+  - GET /tasks/:id
+  - POST /tasks
+  - PUT /tasks/:id
+  - DELETE /tasks/:id
+
+2. The difference between demo storage and real storage
+- In the beginning, data was stored in memory inside the app.
+- That is fine for learning, but it disappears when the app restarts.
+- A real app should store data in a database so it survives restarts.
+
+3. Why a repository layer matters
+- The routes should not directly manage storage logic.
+- A repository is a middle layer that handles database operations.
+- This makes the app easier to maintain and change later.
+
+4. Why environment variables are important
+- Secrets and configuration should not be hardcoded.
+- A .env file is used to store values like database connection strings.
+- This is standard in real projects.
+
+5. PostgreSQL and persistence
+- PostgreSQL is a real database that stores data permanently.
+- This is different from an in-memory array because the data remains after restarting the app or container.
+
+6. Docker and containers
+- Docker helps you package your app and its dependencies.
+- You can run your app and database together in separate containers.
+- This makes development and deployment easier and more consistent.
+
+7. Docker Compose
+- Docker Compose lets you start multiple services with one command.
+- In this assignment, it starts the app and the PostgreSQL database together.
+
+8. The big architectural idea
+- The API routes stay the same.
+- Only the storage implementation changes.
+- This is the key lesson: you can switch from in-memory storage to a database without rewriting the whole app.
+
+9. How to prove persistence
+- Create a task.
+- Restart the app/container.
+- Call GET /tasks again.
+- If the task is still there, the data is persistent.
+
+10. What to focus on while learning
+- Understand the flow: request -> route -> repository -> database -> response.
+- Learn why separation of layers makes applications easier to grow.
+- Practice connecting the app to a real database and seeing how data survives restarts.
