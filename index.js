@@ -4,11 +4,11 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
 const path = require('path');
-const PostgresTaskRepository = require('./repositories/postgresTaskRepository');
+const SqliteTaskRepository = require('./repositories/sqliteTaskRepository');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const repository = new PostgresTaskRepository(process.env.DATABASE_URL);
+const repository = new SqliteTaskRepository();
 
 app.use(express.json());
 
