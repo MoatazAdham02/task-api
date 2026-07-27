@@ -1,10 +1,11 @@
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
 const path = require('path');
 const SqliteTaskRepository = require('./repositories/sqliteTaskRepository');
+const { requireAuth, signup, login, logout } = require('./auth');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +15,26 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Hello from Task API');
+});
+
+app.get('/public/info', (req, res) => {
+  res.status(200).json({ message: 'Welcome stranger! This info is public.' });
+});
+
+app.post('/auth/signup', signup);
+app.post('/auth/login', login);
+app.post('/auth/logout', requireAuth, logout);
+
+app.get('/protected/profile', requireAuth, (req, res) => {
+  res.status(200).json({
+    id: req.user.id,
+    email: req.user.email,
+    created_at: req.user.created_at
+  });
+});
+
+app.get('/protected/dashboard', requireAuth, (req, res) => {
+  res.status(200).json({ message: 'Welcome to your dashboard' });
 });
 
 app.get('/tasks', async (req, res) => {
@@ -98,5 +119,6 @@ app.get('/openapi.json', (req, res) => {
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port, () => {
+  console.log(`Server running and connected to Supabase`);
   console.log(`Server listening on http://localhost:${port}`);
 });

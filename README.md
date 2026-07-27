@@ -1,11 +1,13 @@
 # Task API
 
-A simple Node.js + Express CRUD API for managing tasks with a PostgreSQL-backed repository.
+A simple Node.js + Express API for managing tasks with SQLite persistence and Supabase authentication.
 
-## Run locally with Docker Compose
+## Run locally
 
 ```bash
-docker compose up --build
+cp .env.example .env
+npm install
+node index.js
 ```
 
 Then open:
@@ -14,49 +16,48 @@ Then open:
 
 ## Environment
 
-Create a local .env file using the example:
+Create a local `.env` file using the example:
 
 ```bash
 cp .env.example .env
 ```
 
-The app reads the Postgres connection string from the DATABASE_URL environment variable.
+Add your Supabase values:
+
+```env
+PORT=3000
+SUPABASE_URL=https://your-project-url.supabase.co
+SUPABASE_KEY=your-anon-key
+```
 
 ## Available endpoints
 
-- GET /tasks
-- GET /tasks/:id
-- POST /tasks
-- PUT /tasks/:id
-- DELETE /tasks/:id
+| Method | Endpoint | Authentication |
+| --- | --- | --- |
+| GET | `/public/info` | No |
+| POST | `/auth/signup` | No |
+| POST | `/auth/login` | No |
+| POST | `/auth/logout` | Bearer token |
+| GET | `/protected/profile` | Bearer token |
+| GET | `/protected/dashboard` | Bearer token |
+| GET, POST | `/tasks` | No |
+| GET, PUT, DELETE | `/tasks/:id` | No |
 
-## Persistence note
+## Auth flow
 
-The app now uses PostgreSQL instead of an in-memory array, so tasks persist across app and container restarts. The persistence check is to create a task, restart the app/container, and confirm the task is still returned from GET /tasks.
+1. Sign up with `POST /auth/signup`
+2. Log in with `POST /auth/login`
+3. Copy the returned `access_token`
+4. Send it as `Authorization: Bearer <token>` to `/protected/profile`
 
-## Persistence verification (example)
+## Swagger UI
 
-Run these commands to verify data persists across restarts:
+Open http://localhost:3000/docs to try the protected routes and authorize with a bearer token.
+
+## Tests
+
+Run the local repository and authorization-header checks with:
 
 ```bash
-# create a task
-curl -sS -X POST http://localhost:3000/tasks \
-	-H "Content-Type: application/json" \
-	-d '{"title":"persistence check"}' | jq .
-
-# list tasks (should include the created task)
-curl -sS http://localhost:3000/tasks | jq .
-
-# stop containers (keeps the Postgres volume)
-docker compose down
-
-# start again
-docker compose up --build -d
-
-# re-check tasks (task should still be present)
-curl -sS http://localhost:3000/tasks | jq .
+npm test
 ```
-
-Notes:
-- If you don't have `jq` installed, omit the `| jq .` parts.
-- Do NOT run `docker compose down --volumes` — that will remove the Postgres data volume and delete your data.
