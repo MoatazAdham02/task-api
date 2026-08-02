@@ -2,6 +2,14 @@
 
 A simple Node.js + Express API for managing tasks with SQLite persistence and Supabase authentication.
 
+## Launch page
+
+This repository includes a near-blank portfolio launch page in `docs/`, deployed through GitHub Pages. After enabling **Settings → Pages → Build and deployment → Source: GitHub Actions**, its live URL will be:
+
+`https://moatazadham02.github.io/task-api/`
+
+The materials to copy into the Claude Project for the next build week are in [`docs/CLAUDE-PROJECT-MATERIALS.md`](docs/CLAUDE-PROJECT-MATERIALS.md).
+
 ## Run locally
 
 ```bash
